@@ -1,0 +1,17 @@
+#!/bin/bash
+
+skaffold config set --global local-cluster true 
+eval $(minikube -p cux5 docker-env)
+
+# and run with port forwarding config of which is taken from skaffold.yaml
+skaffold run --port-forward=user
+
+# show images
+minikube image ls -p cux5 --format table
+
+# remove image
+minikube -p cux5 image rm images_ids
+
+# get ids of images
+minikube image ls -p cux5 --format json|sed "s/},{/\n/g"|grep cux5-service|cut -d: -f2|cut -d, -f1|sed 's/"//g'
+

@@ -1,0 +1,27 @@
+apiVersion: skaffold/v4beta9
+kind: Config
+metadata:
+  name: cux5
+build:
+  artifacts:
+    - image: cux5-service-shoprec
+      context: cux5-service-shoprec
+      jib: {}
+    - image: cux5-service-postman
+      context: cux5-service-postman
+      jib: {}
+manifests:
+  rawYaml:
+    - k8s/postgresql.yml
+    - k8s/kafka.yml
+    - k8s/postman.yml
+    - k8s/shoprec.yml
+portForward:
+  - resourceType: service
+    resourceName: cux5-service-postman
+    port: 80
+    localPort: 8080
+  - resourceType: service
+    resourceName: cux5-service-shoprec
+    port: 80
+    localPort: 8081

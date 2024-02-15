@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cux5-service-shoprec
+  labels:
+    app: cux5-service-shoprec
+spec:
+  type: ClusterIP
+  selector:
+    app: cux5-service-shoprec
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cux5-service-shoprec
+  labels:
+    app: cux5-service-shoprec
+spec:
+  selector:
+    matchLabels:
+      app: cux5-service-shoprec
+  template:
+    metadata:
+      labels:
+        app: cux5-service-shoprec
+    spec:
+      containers:
+        - name: cux5-service-shoprec
+          image: cux5-service-shoprec
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BPL_JVM_THREAD_COUNT
+              value: "50"
+            - name: APP_TESTDATA_ENABLED
+              value: "true"
+
+
